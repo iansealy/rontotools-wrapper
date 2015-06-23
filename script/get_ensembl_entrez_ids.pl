@@ -34,10 +34,8 @@ use Bio::EnsEMBL::Registry;
 
 =cut
 
-# Constants
-Readonly our $ENSEMBL_SPECIES => 'danio_rerio';
-
 # Default options
+my $ensembl_species = 'danio_rerio';
 my $ensembl_dbhost = 'ensembldb.ensembl.org';
 my $ensembl_dbport;
 my $ensembl_dbuser = 'anonymous';
@@ -61,7 +59,7 @@ warn 'Genebuild version: ', $genebuild_version, "\n" if $debug;
 
 # Get Ensembl adaptors
 my $sa =
-  Bio::EnsEMBL::Registry->get_adaptor( $ENSEMBL_SPECIES, 'core', 'Slice' );
+  Bio::EnsEMBL::Registry->get_adaptor( $ensembl_species, 'core', 'Slice' );
 
 # Ensure database connection isn't lost; Ensembl 64+ can do this more elegantly
 ## no critic (ProhibitMagicNumbers)
@@ -100,13 +98,14 @@ sub get_and_check_options {
 
     # Get options
     GetOptions(
-        'ensembl_dbhost=s' => \$ensembl_dbhost,
-        'ensembl_dbport=i' => \$ensembl_dbport,
-        'ensembl_dbuser=s' => \$ensembl_dbuser,
-        'ensembl_dbpass=s' => \$ensembl_dbpass,
-        'debug'            => \$debug,
-        'help'             => \$help,
-        'man'              => \$man,
+        'ensembl_species=s' => \$ensembl_species,
+        'ensembl_dbhost=s'  => \$ensembl_dbhost,
+        'ensembl_dbport=i'  => \$ensembl_dbport,
+        'ensembl_dbuser=s'  => \$ensembl_dbuser,
+        'ensembl_dbpass=s'  => \$ensembl_dbpass,
+        'debug'             => \$debug,
+        'help'              => \$help,
+        'man'               => \$man,
     ) or pod2usage(2);
 
     # Documentation
@@ -123,6 +122,7 @@ sub get_and_check_options {
 =head1 USAGE
 
     get_ensembl_entrez_ids.pl
+        [--ensembl_species species]
         [--ensembl_dbhost host]
         [--ensembl_dbport port]
         [--ensembl_dbuser username]
@@ -134,6 +134,10 @@ sub get_and_check_options {
 =head1 OPTIONS
 
 =over 8
+
+=item B<--ensembl_species SPECIES>
+
+Ensembl species (e.g. danio_rerio).
 
 =item B<--ensembl_dbhost HOST>
 
